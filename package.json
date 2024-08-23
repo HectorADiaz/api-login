@@ -4,15 +4,15 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start":"node src/index.js",
-    "dev":"npx nodemon src/index.js"
-
+    "start": "node app/server.js",
+    "dev": "npx nodemon app/server.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "express": "^4.19.2",
+    "morgan": "^1.10.0",
     "mysql2": "^3.11.0",
     "sequelize": "^6.37.3"
   },
