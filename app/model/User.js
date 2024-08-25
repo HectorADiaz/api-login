@@ -1,25 +1,20 @@
-
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
-const User = sequelize.define('Users', 
+const User = sequelize.define('User', 
     {
-        id: {
+        userId: {
             type: DataTypes.INTEGER,
             autoIncrement: true,
             primaryKey: true
         },
-        userName: {
+        username: {
             type: DataTypes.STRING,
             allowNull: false,
             unique: true,
             validate: {
                 notEmpty: {
                   msg: 'The username is required.'
-                },
-                len: {
-                  args: [3, 50],
-                  msg: 'The username must be between 3 and 50 characters long.'
                 }
             }
         },
@@ -38,22 +33,13 @@ const User = sequelize.define('Users',
         },
         password: {
             type: DataTypes.STRING,
-            allowNull: false,
-            validate: {
-                notEmpty: {
-                  msg: 'The password is required.'
-                },
-                len: {
-                  args: [8, 255],
-                  msg: 'The password must be at least 8 characters long.'
-                }
-            }
+            allowNull: false
         },
         roleId: {
             type: DataTypes.INTEGER,
             references: {
-            model: 'roles',
-            key: 'id'
+                model: 'Roles', // Esto hace referencia al nombre de la tabla
+                key: 'id'
             }
         },
         isActive: {
@@ -86,10 +72,10 @@ const User = sequelize.define('Users',
         }
     },
     {
-        timestamps: true, // Esto maneja automáticamente createdAt y updatedAt
+        timestamps: true,
         updatedAt: 'updatedAt',
         createdAt: 'createdAt',
-        onUpdate: DataTypes.NOW // Para mantener updatedAt sincronizado
+        onUpdate: DataTypes.NOW
     }
 );
 
