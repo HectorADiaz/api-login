@@ -7,6 +7,8 @@ const { User, Role } = require('../model/associations');
 
 // Endpoint to fetch all users
 router.get('/users', async (req, res) => {
+    const ip = req.ip;
+
     try {
         const users = await User.findAll({
             attributes: ['userId', 'username', 'email', 'roleId', 'isActive'], // Especifica los campos a devolver si es necesario
@@ -16,7 +18,7 @@ router.get('/users', async (req, res) => {
             ok: true,
             status: 200,
             message: "Users retrieved successfully.",
-            data: users
+            data: body
         });
     } catch (error) {
 
@@ -81,19 +83,60 @@ router.get('/users/:id', async (req, res) => {
     }
 });
 
+// Función para validar la entrada de usuario
+async function validateUserInput({ username, email, password }) {
+    const errors = [];
+
+    // Validación de username
+    if (!username || typeof username !== 'string' || username.length < 3 || username.length > 20) {
+        errors.push('El username debe tener entre 3 y 20 caracteres y ser una cadena.');
+    }
+
+    const usernameRegex = /^[a-zA-Z0-9_]+$/;
+    if (!usernameRegex.test(username)) {
+        errors.push('El username solo puede contener caracteres alfanuméricos y guiones bajos.');
+    }
+
+    // Validación de email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        errors.push('El formato del email no es válido.');
+    }
+
+    // Validación de password
+    if (!password || password.length < 8) {
+        errors.push('La contraseña debe tener al menos 8 caracteres.');
+    }
+
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+    if (!passwordRegex.test(password)) {
+        errors.push('La contraseña debe contener al menos una letra mayúscula, una minúscula, un número y un carácter especial.');
+    }
+
+    if (errors.length > 0) {
+        throw new Error(JSON.stringify(errors));
+    }
+}
+
 // Endpoint to save a new user.
 router.post("/users",async( req, res) =>{
     const {username, email, password, roleId, createdBy } = req.body;
 
     try {
-         // Validar que todos los campos requeridos estén presentes
-         if (!username || !email || !password) {
+         // Validaciones de formato 
+        const errors = await validateUserInput({ username, email, password });
+        
+        const existingUser = await User.findOne({ username })
+        console.error("Error fetching user by ID:", existingUser);
+     
+        if( existingUser  ){
             return res.status(400).json({
                 ok: false,
                 status: 400,
-                message: "Missing required fields: userName, email, or password."
-            });
+                mensaje: 'El username ya está en uso',
+            }); 
         }
+        
         // Hash de la contraseña
         const hashedPass = await bcrypt.hash(password, saltRounds);
  
@@ -144,19 +187,41 @@ router.put("/users",async( req, res) =>{
  
     try {
         // Validar que todos los campos requeridos estén presentes
-        if (!username || !email || !password ||!updatedBy) {
+        const errors = await validateUserInput({ username, email, password });
+        if (isNaN(roleId)||isNaN(updatedBy)||isNaN(isActive)) {
             return res.status(400).json({
                 ok: false,
                 status: 400,
-                message: "Missing required fields: username, email, or password."
+                message: "Invalid roleId, unpdateBy or isActive"
             });
         }
-        const user = await User.findOne({
-            where: { userId: userId },
-        });
+
+        
+       
+        // Buscar el usuario a actualizar y verificar el username en la misma consulta
+        const [userToUpdate, existingUser] = await Promise.all([
+            User.findOne({ where: { userId: userId } }),
+            User.findOne({ where: { username } })
+        ]);
+
+        if (!userToUpdate) {
+                return res.status(404).json({
+                ok: false,
+                status: 404,
+                mensaje: 'Usuario no encontrado'
+            });
+        }
+        // Verificar si el username ya está en uso y pertenece a otro usuario
+        if (existingUser && existingUser.id !== userId) {
+            return res.status(400).json({
+                ok: false,
+                status: 400,
+                message: 'El username ya está en uso'
+            });
+        }
         
         // Si el usuario ya está desactivado, omitir la actualización
-        if (!user.isActive) {
+        if (!userToUpdate.isActive) {
             return res.status(200).json({
               ok: true,
               status: 200,
