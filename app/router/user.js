@@ -18,7 +18,7 @@ router.get('/users', async (req, res) => {
             ok: true,
             status: 200,
             message: "Users retrieved successfully.",
-            data: body
+            data: users
         });
     } catch (error) {
 
@@ -33,6 +33,7 @@ router.get('/users', async (req, res) => {
     }
 });
 
+// TODO en el front con nanoId
 // Endpoint to fetch a user by ID
 router.get('/users/:id', async (req, res) => {
     try {
@@ -136,7 +137,7 @@ router.post("/users",async( req, res) =>{
                 mensaje: 'El username ya está en uso',
             }); 
         }
-        
+
         // Hash de la contraseña
         const hashedPass = await bcrypt.hash(password, saltRounds);
  
