@@ -122,19 +122,24 @@ async function validateUserInput({ username, email, password }) {
 // Endpoint to save a new user.
 router.post("/users",async( req, res) =>{
     const {username, email, password, roleId, createdBy } = req.body;
-
+    console.log(req.body)
     try {
          // Validaciones de formato 
         const errors = await validateUserInput({ username, email, password });
-        
-        const existingUser = await User.findOne({ username })
+        // const existingUser = await Promise.all([
+        //     User.findOne({ where: { username } })
+        // ]);
+        const existingUser = await User.findOne({ where: { username: username } });
+
+        // const existingUser = await User.findOne({ username })
+
         console.error("Error fetching user by ID:", existingUser);
      
         if( existingUser  ){
             return res.status(400).json({
                 ok: false,
                 status: 400,
-                mensaje: 'El username ya está en uso',
+                mensaje: 'Eal username ya está en uso',
             }); 
         }
 
