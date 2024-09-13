@@ -237,6 +237,39 @@ CREATE INDEX idx_clients_email ON clients (email);
 
 
 
+CREATE TABLE banks (
+    bankId INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    bankName VARCHAR(100) NOT NULL -- Nombre del banco 
+);
+
+CREATE TABLE accountTypes (
+    accountTypeId INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    typeName VARCHAR(50) NOT NULL, -- Nombre del tipo de cuenta (Monetario, ahorro, etc...)
+);
+
+-- 
+
+CREATE TABLE bankAccounts (
+    bankAccountId INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    bankId INT UNSIGNED, -- ID del banco (relacionado con tabla banks)
+    accountNumber VARCHAR(30) NOT NULL, -- Número de cuenta
+    accountName VARCHAR(100) NOT NULL, -- Nombre de la cuenta
+    accountTypeId INT UNSIGNED NOT NULL, -- Tipo de cuenta (relacionado con tabla accountTypes)
+    isActive BOOLEAN DEFAULT TRUE, -- 1: Activo, 0: Inactivo
+    typeAccounts ENUM('propietary', 'provider') NOT NULL, -- Tipo de cuenta ('propietary' o 'provider')
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    deletedAt TIMESTAMP NULL DEFAULT NULL, -- Eliminación lógica
+    createdBy INT UNSIGNED,
+    updatedBy INT UNSIGNED,
+    deletedBy INT UNSIGNED,
+    FOREIGN KEY (bankId) REFERENCES banks(bankId) ON DELETE CASCADE,
+    FOREIGN KEY (accountTypeId) REFERENCES accountTypes(accountTypeId) ON DELETE CASCADE
+);
+-- Índices 
+CREATE INDEX idx_bank_accounts_number ON bankAccounts (accountNumber);
+
+ 
 CREATE TABLE providers (
     providersId INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     businessName VARCHAR(150) NOT NULL, -- Razón Social
@@ -247,7 +280,6 @@ CREATE TABLE providers (
     email VARCHAR(100), -- Correo electrónico del proveedor
     managerName VARCHAR(100), -- Nombre del gerente
     managerPhone VARCHAR(15), -- Teléfono del gerente
-    --bankAccountId INT, -- Relación con la tabla de cuentas bancarias
     isActive BOOLEAN DEFAULT TRUE, -- 1: Activo, 0: Inactivo
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -255,136 +287,31 @@ CREATE TABLE providers (
     createdBy INT UNSIGNED,
     updatedBy INT UNSIGNED,
     deletedBy INT UNSIGNED,
-    CONSTRAINT `fk_providers_bank_account`
-        FOREIGN KEY (bankAccountId) REFERENCES bankAccounts(bankAccountId)
-        ON DELETE SET NULL
-        ON UPDATE CASCADE
 );
- 
- 
 -- Índices
 CREATE INDEX idx_providers_business_name ON providers (commercialName);
 CREATE INDEX idx_providers_nit ON providers (nit);
 
 
-
--- 
-CREATE TABLE bankAccounts (
-    bankAccountId INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    bankId INT NULL, -- Nombre del banco --Referencia  tabla (banks)
-    accountNumber VARCHAR(30) NOT NULL, -- Número de cuenta
-    accountName VARCHAR(100) NOT NULL, -- Nombre de la cuenta
-    accountTypesId INT NOT NULL, -- Tipo de cuenta, relacionada con accountTypes
-    isActive BOOLEAN DEFAULT TRUE, -- 1: Activo, 0: Inactivo
-    typeAccounts ENUM('propietary', 'provider') NOT NULL, -- Tipo, solo puede ser 'client' o 'provider'
-    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    deletedAt TIMESTAMP NULL DEFAULT NULL, -- Eliminación lógica
-    createdBy INT UNSIGNED,
-    updatedBy INT UNSIGNED,
-    deletedBy INT UNSIGNED,
-     CONSTRAINT `fk_bankAccounts_bank`
-        FOREIGN KEY (bankId) REFERENCES banks(bankId)
-        ON DELETE SET NULL ON UPDATE CASCADE,
-     CONSTRAINT `fk_bankAccounts_accountType`
-        FOREIGN KEY (accountTypesId) REFERENCES accountTypes(accountTypesId)
-        ON DELETE SET NULL ON UPDATE CASCADE
-);
--- Índices 
-CREATE INDEX idx_bank_accounts_number ON bankAccounts (accountNumber);
-
-
-CREATE TABLE banks (
-    bankId INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    bank_name VARCHAR(100) NOT NULL -- Nombre del banco 
-);
-
-CREATE TABLE accountTypes (
-    accountTypesId INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    type_name VARCHAR(50) NOT NULL, -- Nombre del tipo de cuenta (Monetario, ahorro, etc...)
-);
 -- Tabla relacional 
 -- 
 CREATE TABLE EntityAccounts (
     entityAccountsId INT AUTO_INCREMENT PRIMARY KEY,
-    providersId INT NOT NULL,
-    bankAccountId INT NOT NULL,
+    providersId INT UNSIGNED NOT NULL,
+    bankAccountId INT UNSIGNED NOT NULL,
     createdBy VARCHAR(50),
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updatedBy VARCHAR(50),
     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     
     -- Relaciones
-    CONSTRAINT fk_provider FOREIGN KEY (providersId) REFERENCES providers(providersId) ON DELETE CASCADE,
-    CONSTRAINT fk_account FOREIGN KEY (bankAccountId) REFERENCES bankAccounts(bankAccountId) ON DELETE RESTRICT
+    FOREIGN KEY (providersId) REFERENCES providers(providersId) ON DELETE CASCADE,
+    FOREIGN KEY (bankAccountId) REFERENCES bankAccounts(bankAccountId) ON DELETE CASCADE
 );
-
+-- Índices para mejorar el rendimiento en consultas con claves foráneas
+CREATE INDEX idx_entity_accounts_provider ON EntityAccounts (providersId);
+CREATE INDEX idx_entity_accounts_bank_account ON EntityAccounts (bankAccountId);
 
 entre proveedores y bankAccounts
             1           1
             1           2
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-CREAR QUERYS CON EL ORDEN ESPECIFICADO EN DEL  DOC 
-
-Orden de guardado de datos 
-modulo 
-typeOperations
-operacioes
-roles
-user
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
