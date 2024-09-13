@@ -68,8 +68,8 @@ router.get('/logout', verifyToken, (req, res) => {
     res.send(`Logout exitoso para usuario ${req.username}`);
 });
 
-router.get('/register', (req, res) => {
-    // const { email, pass } = req.body;
-    res.send('Hola  soy  logout ')
-});  
+// router.get('/register', (req, res) => {
+//     // const { email, pass } = req.body;
+//     res.send('Hola  soy  logout ')
+// });  
 module.exports = router;
