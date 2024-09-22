@@ -223,13 +223,13 @@ CREATE TABLE clients (
     phone VARCHAR(15) NOT NULL, -- Teléfono de contacto
     nit VARCHAR(15) NOT NULL, -- nit de cliente
     address TEXT NOT NULL, -- Dirección del cliente
-    status BOOLEAN DEFAULT TRUE, -- 1: Activo, 0: Inactivo (Eliminación lógica)
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Fecha de creación
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- Fecha de actualización
-    deleted_at TIMESTAMP NULL DEFAULT NULL, -- Para eliminación lógica
-    created_by INT UNSIGNED, -- Usuario que creó el registro
-    updated_by INT UNSIGNED, -- Usuario que actualizó el registro
-    deleted_by INT UNSIGNED -- Usuario que eliminó el registro
+    isActive BOOLEAN DEFAULT TRUE, -- 1: Activo, 0: Inactivo (Eliminación lógica)
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Fecha de creación
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- Fecha de actualización
+    deletedAt TIMESTAMP NULL DEFAULT NULL, -- Para eliminación lógica
+    createdBy INT UNSIGNED, -- Usuario que creó el registro
+    updatedBy INT UNSIGNED, -- Usuario que actualizó el registro
+    deletedBy INT UNSIGNED -- Usuario que eliminó el registro
 );
 -- Índices
 CREATE INDEX idx_clients_name ON clients (clientName);

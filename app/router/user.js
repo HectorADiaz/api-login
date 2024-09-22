@@ -3,7 +3,11 @@ const router = require("express").Router();
 // const Role = require("../model/Role.js");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
-const { User, Role } = require('../model/associations');
+const User = require('../model/User'); // Ajusta la ruta según tu estructura de archivos
+const Role = require('../model/Role'); // Asegúrate de importar el modelo Role
+
+
+require('../model/associations'); // Asegúrate de que este archivo se cargue primero
 
 // Endpoint to fetch all users
 router.get('/users', async (req, res) => {
@@ -11,14 +15,29 @@ router.get('/users', async (req, res) => {
 
     try {
         const users = await User.findAll({
-            attributes: ['userId', 'username', 'email', 'roleId', 'isActive'], // Especifica los campos a devolver si es necesario
+            attributes: ['userId', 'username', 'email', 'roleId', 'isActive'],
+            include: [{
+                model: Role,
+                attributes: ['roleId', 'name'] // Especifica los campos que deseas del rol
+            }]
         });
+
+        const usersWithRole = users.map(user => ({
+            userId: user.userId,
+            username: user.username,
+            email: user.email,
+            isActive: user.isActive,
+            role: {
+                roleId: user.roleId, // Mantenemos el roleId
+                name: user.Role.name // Añadimos el campo name del Role
+            }
+        }));
 
         return res.status(200).json({
             ok: true,
             status: 200,
             message: "Users retrieved successfully.",
-            data: users
+            data: usersWithRole
         });
     } catch (error) {
 

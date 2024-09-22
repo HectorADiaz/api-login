@@ -7,8 +7,9 @@ const whiteList =['http://localhost:4200']
 
 const User = require("./router/user");
 const Login = require("./router/login");
+const Client = require("./router/client");
 
-
+require('../app/model/associations')
 app.use(morgan("dev"));
 
 app.use(bodyParser.json());
@@ -21,5 +22,6 @@ app.get('/',(req,res)=>{
 
 app.use("/api/v1/",User);
 app.use("/api/v1/",Login)
+app.use("/api/v1/",Client)
 
 module.exports = app;

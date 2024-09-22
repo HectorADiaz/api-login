@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
+const Role =  require('../model/Role');
 
 const User = sequelize.define('User', 
     {
@@ -72,10 +73,7 @@ const User = sequelize.define('User',
         }
     },
     {
-        timestamps: true,
-        updatedAt: 'updatedAt',
-        createdAt: 'createdAt',
-        onUpdate: DataTypes.NOW
+        timestamps: true // Esto es necesario si quieres que Sequelize maneje createdAt y updatedAt
     }
 );
 
