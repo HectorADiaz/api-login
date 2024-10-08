@@ -39,7 +39,7 @@ const User = sequelize.define('User',
         roleId: {
             type: DataTypes.INTEGER,
             references: {
-                model: 'Roles', // Esto hace referencia al nombre de la tabla
+                model: 'Roles',
                 key: 'id'
             }
         },
@@ -73,7 +73,7 @@ const User = sequelize.define('User',
         }
     },
     {
-        timestamps: true // Esto es necesario si quieres que Sequelize maneje createdAt y updatedAt
+        timestamps: true
     }
 );
 

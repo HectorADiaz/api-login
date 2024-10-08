@@ -37,44 +37,26 @@ const Client = sequelize.define('Client', {
   },
   email: {
     type: DataTypes.STRING,
+    allowNull: true,
     validate: {
       isEmail: {
         msg: 'The email format is invalid.'
       },
-      notEmpty: {
-        msg: 'The email is required.'
-      }
     }
   },
   phone: {
     type: DataTypes.STRING,
-    allowNull: false,
-    unique: true,
-    validate: {
-      notEmpty: {
-        msg: 'The phone is required.'
-      }
-    }
+    allowNull: true,
   },
   nit: {
     type: DataTypes.STRING,
-    allowNull: false,
-    validate: {
-      notEmpty: {
-        msg: 'The nit is required.'
-      }
-    }
+    allowNull: true,
   },
   address: {
     type: DataTypes.TEXT,
-    allowNull: false,
-    validate: {
-      notEmpty: {
-        msg: 'The address is required.'
-      }
-    }
+    allowNull: true,
   },
-  isActive: { // Este campo es `isActive` en tu código, pero en la tabla lo llamaste `c`
+  isActive: {
     type: DataTypes.BOOLEAN,
     defaultValue: true
   },
@@ -123,5 +105,4 @@ const Client = sequelize.define('Client', {
   deletedAt: 'deletedAt'
 });
 
-// module.exports = Client;
 module.exports = { Client };

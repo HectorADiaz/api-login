@@ -1,8 +1,8 @@
 // models/entityAccount.js
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
-const Provider = require('./provider');
-const BankAccount = require('./bankAccount');
+const Provider = require('./Provider');
+const BankAccount = require('./BankAccount');
 
 const EntityAccount = sequelize.define('EntityAccount', {
   entityAccountsId: {
@@ -10,20 +10,35 @@ const EntityAccount = sequelize.define('EntityAccount', {
     primaryKey: true,
     autoIncrement: true,
   },
+  providersId: {
+     type: DataTypes.INTEGER,
+    references: {
+      model: 'Provider',
+      key: 'providersId'
+    }
+  },
+  bankAccountId: {
+    type: DataTypes.INTEGER,
+    allowNull: true,
+    references: {
+      model: 'BankAccount',
+      key: 'BankAccountid'
+    }
+  },
   createdBy: {
-    type: DataTypes.STRING(50),
+    type: DataTypes.STRING,
     allowNull: true,
   },
   createdAt: {
-    type: DataTypes.TIMESTAMP,
+    type: DataTypes.DATE,
     defaultValue: DataTypes.NOW,
   },
   updatedBy: {
-    type: DataTypes.STRING(50),
+    type: DataTypes.STRING,
     allowNull: true,
   },
   updatedAt: {
-    type: DataTypes.TIMESTAMP,
+    type: DataTypes.DATE,
     defaultValue: DataTypes.NOW,
     onUpdate: DataTypes.NOW,
   },
@@ -31,9 +46,5 @@ const EntityAccount = sequelize.define('EntityAccount', {
   tableName: 'EntityAccounts',
   timestamps: false,
 });
-
-// Relaciones
-EntityAccount.belongsTo(Provider, { foreignKey: 'providersId', onDelete: 'CASCADE' });
-EntityAccount.belongsTo(BankAccount, { foreignKey: 'bankAccountId', onDelete: 'CASCADE' });
 
 module.exports = EntityAccount;

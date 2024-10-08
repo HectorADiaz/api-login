@@ -1,19 +1,20 @@
 // models/provider.js
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
+const EntityAccount = require('../model/EntityAccount');
 
 const Provider = sequelize.define('Provider', {
   providersId: {
-    type: DataTypes.INTEGER.UNSIGNED,
+    type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true,
   },
   businessName: {
-    type: DataTypes.STRING(150),
+    type: DataTypes.STRING,
     allowNull: false,
   },
   commercialName: {
-    type: DataTypes.STRING(150),
+    type: DataTypes.STRING,
     allowNull: false,
   },
   fiscalAddress: {
@@ -21,23 +22,23 @@ const Provider = sequelize.define('Provider', {
     allowNull: false,
   },
   nit: {
-    type: DataTypes.STRING(20),
+    type: DataTypes.STRING,
     allowNull: false,
   },
   phone: {
-    type: DataTypes.STRING(15),
+    type: DataTypes.STRING,
     allowNull: true,
   },
   email: {
-    type: DataTypes.STRING(100),
+    type: DataTypes.STRING,
     allowNull: true,
   },
   managerName: {
-    type: DataTypes.STRING(100),
+    type: DataTypes.STRING,
     allowNull: true,
   },
   managerPhone: {
-    type: DataTypes.STRING(15),
+    type: DataTypes.STRING,
     allowNull: true,
   },
   isActive: {
@@ -45,21 +46,22 @@ const Provider = sequelize.define('Provider', {
     defaultValue: true,
   },
   createdAt: {
-    type: DataTypes.TIMESTAMP,
+    type: DataTypes.DATE,
     defaultValue: DataTypes.NOW,
   },
   updatedAt: {
-    type: DataTypes.TIMESTAMP,
+    type: DataTypes.DATE,
     defaultValue: DataTypes.NOW,
     onUpdate: DataTypes.NOW,
   },
   deletedAt: {
-    type: DataTypes.TIMESTAMP,
+    type: DataTypes.DATE,
     allowNull: true,
-  },
+  }
 }, {
   tableName: 'providers',
   timestamps: false,
 });
+
 
 module.exports = Provider;

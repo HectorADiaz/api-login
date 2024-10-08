@@ -3,12 +3,12 @@ const sequelize = require('../config/database');
 
 const AccountType = sequelize.define('AccountType', {
   accountTypeId: {
-    type: DataTypes.INTEGER.UNSIGNED,
+    type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true,
   },
   typeName: {
-    type: DataTypes.STRING(50),
+    type: DataTypes.STRING,
     allowNull: false,
   },
 }, {

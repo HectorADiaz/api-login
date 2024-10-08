@@ -220,9 +220,9 @@ CREATE TABLE clients (
     firstName VARCHAR(100) NOT NULL, -- Nombre del cliente
     lastName VARCHAR(100) NOT NULL, -- apellido del cliente
     email VARCHAR(100), -- Correo electrónico
-    phone VARCHAR(15) NOT NULL, -- Teléfono de contacto
-    nit VARCHAR(15) NOT NULL, -- nit de cliente
-    address TEXT NOT NULL, -- Dirección del cliente
+    phone VARCHAR(15), -- Teléfono de contacto
+    nit VARCHAR(15), -- nit de cliente
+    address TEXT, -- Dirección del cliente
     isActive BOOLEAN DEFAULT TRUE, -- 1: Activo, 0: Inactivo (Eliminación lógica)
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Fecha de creación
     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- Fecha de actualización

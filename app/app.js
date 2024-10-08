@@ -1,27 +1,32 @@
-const express  = require('express');
+const express = require("express");
 const morgan = require("morgan");
-const bodyParser = require('body-parser');
+const bodyParser = require("body-parser");
 const app = express();
-const cors = require('cors');
-const whiteList =['http://localhost:4200']
+const cors = require("cors");
+const whiteList = ["http://localhost:4200"];
 
 const User = require("./router/user");
 const Login = require("./router/login");
 const Client = require("./router/client");
+const Provider = require("./router/provider");
 
-require('../app/model/associations')
+require("../app/model/associations");
 app.use(morgan("dev"));
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended:false}));
-app.use(cors({ origin:whiteList }));
+app.use(bodyParser.urlencoded({ extended: false }));
+// app.use(cors({ origin: whiteList }));
+app.use(cors());
 
-app.get('/',(req,res)=>{
-    res.send('This is express')
+
+app.get("/", (req, res) => {
+  res.send("This is express");
 });
 
-app.use("/api/v1/",User);
-app.use("/api/v1/",Login)
-app.use("/api/v1/",Client)
+app.use("/api/v1/", User);
+app.use("/api/v1/", Login);
+app.use("/api/v1/", Client);
+app.use("/api/v1/", Client);
+app.use("/api/v1/", Provider);
 
 module.exports = app;

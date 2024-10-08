@@ -9,13 +9,27 @@ const BankAccount = sequelize.define('BankAccount', {
     primaryKey: true,
     autoIncrement: true,
   },
+  bankId: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: 'Bank',  
+      key: 'bankId'
+    }
+  },
   accountNumber: {
-    type: DataTypes.STRING(30),
+    type: DataTypes.STRING,
     allowNull: false,
   },
   accountName: {
-    type: DataTypes.STRING(100),
+    type: DataTypes.STRING,
     allowNull: false,
+  },
+  accountTypeId: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: 'AccountType',  
+      key: 'accountTypeId'
+    }
   },
   isActive: {
     type: DataTypes.BOOLEAN,
@@ -26,16 +40,16 @@ const BankAccount = sequelize.define('BankAccount', {
     allowNull: false,
   },
   createdAt: {
-    type: DataTypes.TIMESTAMP,
+    type: DataTypes.DATE,
     defaultValue: DataTypes.NOW,
   },
   updatedAt: {
-    type: DataTypes.TIMESTAMP,
+    type: DataTypes.DATE,
     defaultValue: DataTypes.NOW,
     onUpdate: DataTypes.NOW,
   },
   deletedAt: {
-    type: DataTypes.TIMESTAMP,
+    type: DataTypes.DATE,
     allowNull: true,
   },
 }, {
@@ -43,8 +57,5 @@ const BankAccount = sequelize.define('BankAccount', {
   timestamps: false,
 });
 
-// Relaciones
-BankAccount.belongsTo(Bank, { foreignKey: 'bankId', onDelete: 'CASCADE' });
-BankAccount.belongsTo(AccountType, { foreignKey: 'accountTypeId', onDelete: 'CASCADE' });
-
+ 
 module.exports = BankAccount;
