@@ -9,6 +9,7 @@ const User = require("./router/user");
 const Login = require("./router/login");
 const Client = require("./router/client");
 const Provider = require("./router/provider");
+const Bank = require("./router/bank");
 
 require("../app/model/associations");
 app.use(morgan("dev"));
@@ -28,5 +29,6 @@ app.use("/api/v1/", Login);
 app.use("/api/v1/", Client);
 app.use("/api/v1/", Client);
 app.use("/api/v1/", Provider);
+app.use("/api/v1/", Bank);
 
 module.exports = app;
